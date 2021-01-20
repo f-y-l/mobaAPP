@@ -1,5 +1,6 @@
 <template>
 <div class="list">
+    <h1>分类列表</h1>
     <el-table :data="list">
         <el-table-column prop="_id" label="ID" width="220"></el-table-column>
         <el-table-column prop="parent.name" label="上级分类"></el-table-column>
@@ -28,7 +29,7 @@ export default {
         },
         async remove(row) {
             this.$confirm(
-                `是否删除分类${row.name}?`,
+                `是否删除分类“${row.name}”?`,
                 '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

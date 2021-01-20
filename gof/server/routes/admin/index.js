@@ -66,6 +66,10 @@ module.exports = app =>{
             // 当访问分类列表接口时，需要关联查询父分类的信息
             queryOptions.populate = 'parent'
         }
+        if (req.Model.modelName === 'Article'){
+            // 当访问分类列表接口时，需要关联查询父分类的信息
+            queryOptions.populate = 'parent'
+        }
         // 依据模型查找
         const items = await req.Model.find().setOptions(queryOptions)
         res.send(items)
