@@ -68,7 +68,7 @@ module.exports = app =>{
         }
         if (req.Model.modelName === 'Article'){
             // 当访问分类列表接口时，需要关联查询父分类的信息
-            queryOptions.populate = 'parent'
+            queryOptions.populate = 'articles'
         }
         // 依据模型查找
         const items = await req.Model.find().setOptions(queryOptions)

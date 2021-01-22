@@ -6,13 +6,17 @@
         <el-table-column prop="articles" label="所属分类">
             <template slot-scope="{row,}">
                 <span v-for="(item,index) in row.articles" :key="index">
-                分类{{index+1}}：{{item}}
+                分类{{index+1}}：{{item.name}}
                 <br />
             </span>
         </template>
         </el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
-        <el-table-column prop="context" label="内容"></el-table-column>
+        <el-table-column prop="context" label="内容" :show-overflow-tooltip='true'>
+            <template slot-scope="scope">
+                <div v-html="scope.row.context"></div>
+            </template>
+        </el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
             <template slot-scope="scope">
                 <el-button type="primary" size="small" @click="$router.push(`/articles/edit/${scope.row._id}`)">编辑</el-button>

@@ -16,7 +16,9 @@
             <el-input v-model="subValue.title"></el-input>
         </el-form-item>
         <el-form-item label="内容">
-            <el-input type="textarea" v-model="subValue.context"></el-input>
+            <vue-editor v-model="subValue.context"
+             useCustomImageHandler 
+             @image-added="handleImageAdded" ></vue-editor>
         </el-form-item>
         <el-form-itme>
             <el-button type="primary" native-type="submit">保存</el-button>
@@ -25,7 +27,13 @@
 </div>
 </template>
 <script>
+import { VueEditor } from "vue2-editor";
+// import axios from "axios";
+
 export default {
+    components: {
+        VueEditor
+    },
     props: {
         id: {}
     },
@@ -37,6 +45,34 @@ export default {
         }
     },
     methods: {
+        // editor上传自定义图片
+        async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+            // An example of using FormData
+            // NOTE: Your key could be different such as:
+            // formData.append('file', file)
+        
+            const formData = new FormData();
+
+            // formData.append("image", file);
+            formData.append("file", file);
+        
+            // axios({
+            //     url: "https://fakeapi.yoursite.com/images",
+            //     method: "POST",
+            //     data: formData
+            // })
+            //     .then(result => {
+            //     let url = result.data.url; // Get url from response
+            //     Editor.insertEmbed(cursorLocation, "image", url);
+            //     resetUploader();
+            //     })
+            //     .catch(err => {
+            //     console.log(err);
+            // });
+            const res = await this.$http.post("upload", formData)
+            Editor.insertEmbed(cursorLocation, "image", res.data.url);
+            resetUploader();
+        },
         async save() {
             let res
             if (this.id) {
