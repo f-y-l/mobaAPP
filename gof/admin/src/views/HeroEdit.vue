@@ -72,7 +72,10 @@
                 </el-form-item>
             </el-tab-pane>
             <el-tab-pane label="技能" name="skill">
-                <el-button size="big" type="primary" style="margin:1rem" @click="subValue.skills.push({})"><i class="el-icon-plus"></i>添加技能</el-button>
+                <el-button size="big" type="primary" style="margin:1rem"
+                 @click="subValue.skills.push({})">
+                    <i class="el-icon-plus"></i>添加技能
+                </el-button>
                 <el-row type="flex" style="flex-wrap:wrap">
                     <el-col :md="12" v-for="(item ,i) in subValue.skills" :key="i">
                         <el-form-item label="名称">
@@ -199,29 +202,3 @@ export default {
     }
 }
 </script>
-
-<style>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 5rem;
-    height: 5rem;
-    line-height: 5rem;
-    text-align: center;
-  }
-  .avatar {
-    width: 5rem;
-    height: 5rem;
-    display: block;
-  }
-</style>
