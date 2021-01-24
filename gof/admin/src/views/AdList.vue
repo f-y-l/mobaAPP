@@ -4,10 +4,20 @@
     <el-table :data="list">
         <el-table-column prop="_id" label="ID" width="220"></el-table-column>
         <el-table-column prop="name" label="广告位名称"></el-table-column>
-        <el-table-column prop="items.title" label="标题"></el-table-column>
+        <el-table-column prop="items" label="标题">
+            <template slot-scope="{row,}">
+                <span v-for="(item,i) in row.items" :key="i" >
+                    标题{{i+1}}：<b>{{item.title}}</b>
+                    <br />
+                </span>
+            </template>
+        </el-table-column>
         <el-table-column prop="items.image" label="图片">
-            <template slot-scope="scope">
-                <img :src="scope.row.icon" alt="" height="100" width="100">
+            <template slot-scope="{row,}">
+                <span v-for="(item,i) in row.items" :key="i">
+                    图片{{i+1}}：<img :src="item.image" alt="" height="64rem">
+                    <br />
+                </span>
             </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="200">

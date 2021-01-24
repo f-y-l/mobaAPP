@@ -10,7 +10,7 @@
                 <i class="el-icon-plus"></i>添加广告
             </el-button>
             <el-row type="flex" style="flex-wrap:wrap">
-                <el-col  :md="12"  v-for="(item, i) in subValue.items" :key="i">
+                <el-col  :md="11"  v-for="(item, i) in subValue.items" :key="i" style="margin:0.5rem">
                     <el-form-item label="标题">
                         <el-input v-model="item.title"></el-input>
                     </el-form-item>

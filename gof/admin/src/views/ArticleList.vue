@@ -6,10 +6,10 @@
         <el-table-column prop="articles" label="所属分类">
             <template slot-scope="{row,}">
                 <span v-for="(item,index) in row.articles" :key="index">
-                分类{{index+1}}：{{item.name}}
-                <br />
-            </span>
-        </template>
+                    分类{{index+1}}：{{item.name}}
+                    <br />
+                </span>
+            </template>
         </el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="context" label="内容" :show-overflow-tooltip='true'>
