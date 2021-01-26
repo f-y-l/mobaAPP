@@ -88,7 +88,7 @@ module.exports = app =>{
         next()
     },router)
 
-    // 文件上传
+    //二、 文件上传接口
     const multer = require('multer')
 
     var storage = multer.diskStorage({
@@ -116,4 +116,19 @@ module.exports = app =>{
         req.file.url=`http://${req.headers.host}`+`/uploads/`+`${req.file.filename}`
         res.send(req.file)
     })
+
+    //三、 login
+    app.post('/admin/api/login', async (req, res) => {
+        const {username, password} = req.body
+        // 1.根据用户名找到用户信息
+        const AdminUser = require('../../model/AdminUser')
+        const user = AdminUser.find
+
+        // 2.校验密码
+
+        // 3.返回token
+
+        res.send(req.body)
+    } )
+    
 }
