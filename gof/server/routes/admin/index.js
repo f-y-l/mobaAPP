@@ -121,14 +121,31 @@ module.exports = app =>{
     app.post('/admin/api/login', async (req, res) => {
         const {username, password} = req.body
         // 1.根据用户名找到用户信息
-        const AdminUser = require('../../model/AdminUser')
-        const user = AdminUser.find
+        const AdminUser = require('../../models/AdminUser')
+        const user = await AdminUser.findOne({
+            username: username
+        }).select('+password')
+        if (!user){
+            return res.status(422).send({
+                message: "用户不存在"
+            })
+        }
 
         // 2.校验密码
+        if (!require('bcrypt').compareSync(password, user.password)){
+            return res.status(422).send({
+                message: '用户名或密码不正确'
+            })
+        }
 
         // 3.返回token
-
-        res.send(req.body)
+        const jwt = require('jsonwebtoken')
+        const token = jwt.sign({
+                id:user._id,
+                username: user.username
+            }, app.get('secret'))
+        return res.send({token})
+        
     } )
     
 }

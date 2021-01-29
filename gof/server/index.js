@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+// 设置全局变量
+app.set('secret','www.gether.cn')
+
 // 使用跨越
 app.use(require('cors')())
 // 使用express json中间件

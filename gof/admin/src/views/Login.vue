@@ -30,7 +30,16 @@ export default {
     methods: {
         async login(){
             const res = await this.$http.post('login', this.model)
-            console.log(res.data)
+            // console.log(res.data)
+            // 报存token
+            // sessionStorage.token = res.data.token
+            localStorage.clear()
+            localStorage.token = res.data.token
+            this.$message({
+                type:'success',
+                message:"登陆成功"
+            })
+            this.$router.push('/')
         }
     },
 }
