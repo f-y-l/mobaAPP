@@ -24,6 +24,7 @@
                             :show-file-list="false"
                             :on-success="res => $set(item, 'image', res.url)"
                             :before-upload="beforeAvatarUpload"
+                            :headers="getAuthHeaders()"
                         >
                             <img v-if="item.image" :src="item.image" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>

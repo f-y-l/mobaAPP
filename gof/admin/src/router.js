@@ -14,23 +14,27 @@ import AdEdit from './views/AdEdit.vue'
 import AdList from './views/AdList.vue'
 import AdminUserEdit from './views/AdminUserEdit.vue'
 import AdminUserList from './views/AdminUserList.vue'
+import ResumeEdit from './views/ResumeEdit.vue'
+import ResumeList from './views/ResumeList.vue'
 
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path :'/login',
       name :'login',
-      component :Login
+      component :Login,
+      meta: {isPublic: true}
     },
     {
       path: '/',
+      // redirect: '/index',
       name: 'main',
       component: Main,
       children: [
-        {path: '/categories/create',component: CategoryEdit},
+        {path:'/categories/create',component: CategoryEdit},
         {path:'/categories/list',component: CategoryList},
         {path:'/categories/edit/:id',component: CategoryEdit, props: true},
         {path:'/items/create', component: ItemEdit},
@@ -48,8 +52,34 @@ export default new Router({
         {path:'/admin_users/create', component: AdminUserEdit},
         {path:'/admin_users/list',component: AdminUserList},
         {path:'/admin_users/edit/:id',component: AdminUserEdit, props: true},
+        {path:'/resume/create', component: ResumeEdit},
+        {path:'/resume/list',component: ResumeList},
+        {path:'/resume/edit/:id',component: ResumeEdit, props: true},
       ]
     }
   ]
 })
- 
+
+router.beforeEach((to, from, next) => {
+  // to and from are both route objects. must call `next`.
+  // console.log(to)
+  // console.log(from) 
+
+  if (!to.meta.isPublic && !localStorage.token){
+    Vue.prototype.$message({
+      type:'error',
+      message: '你需要登录'
+    })
+    return next('login')
+  }
+  if (to.fullPath === '/login' && localStorage.token){
+    Vue.prototype.$message({
+      type:'error',
+      message: '你已经登录'
+    })
+    return next(from.path)
+  }
+  next()
+})
+
+export default router

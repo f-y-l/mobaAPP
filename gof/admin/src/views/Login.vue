@@ -35,11 +35,13 @@ export default {
             // sessionStorage.token = res.data.token
             localStorage.clear()
             localStorage.token = res.data.token
+            localStorage.name = res.data.username
             this.$message({
                 type:'success',
                 message:"登陆成功"
             })
-            this.$router.push('/')
+            console.log(this)
+            // this.$router.push('/')
         }
     },
 }

@@ -11,6 +11,16 @@ import http from './http'
 // http加载到Vue实例属性上去
 Vue.prototype.$http = http
 
+Vue.mixin({
+  methods:{
+    getAuthHeaders(){
+      return {
+        Authorization : `Bearer ${localStorage.token || ''}` 
+      }
+    }
+  }
+})
+
 new Vue({
   router,
   render: h => h(App)

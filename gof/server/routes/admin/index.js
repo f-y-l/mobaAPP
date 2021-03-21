@@ -2,30 +2,57 @@
 module.exports = app =>{
     // 1. 初始化一个路由
     const express = require('express')
+    const jwt = require('jsonwebtoken')
+    const assert = require('http-assert')
+    const AdminUser = require('../../models/AdminUser')
+    const Resume = require('../../models/Resume')
+    const Auth = require('../../middleware/auth')
+    const Resource = require('../../middleware/resource')
+
     const router = express.Router({
         mergeParams:true
     })
-
+    // 登录校验中间件
+    const authMiddleware = Auth
+    // 模型中间件
+    const resourceMiddleware = Resource
     // 2. 接口
     /* 增 
     新建 */
     router.post('/', async(req, res)=>{
         // 依据模型创建
-        let err = {}
-        let result = null
-        try{
-            result = await req.Model.create(req.body)
-        }
-        catch(error){
-            err=error
-        }
-        console.log(err)
-        if(err=={}){
-            res.send(result)
+        if (req.Model.modelName === 'Resume'){
+            let data = {}
+            let result = null
+            try{
+                result = await req.Model.create(req.body)
+            }
+            catch(error){
+                console.log(error)
+                data.id = -1
+                data.message = "注册失败：" +error
+                res.send(data)
+            }
+            data.message = "注册成功：" + req.body.email
+            res.send(data)
+            // 返回结果给前端
         }else{
-            res.send(err.message)
+            let err = {}
+            let result = null
+            try{
+                result = await req.Model.create(req.body)
+            }
+            catch(error){
+                err=error
+            }
+            console.log(err)
+            if(err=={}){
+                res.send(result)
+            }else{
+                res.send(err.message)
+            }
+            // 返回结果给前端
         }
-        // 返回结果给前端
     })
     /* 删 
     删除 */
@@ -59,7 +86,7 @@ module.exports = app =>{
         }
     })
     /* 查
-    查询列表 */
+    资源列表 */
     router.get('/', async(req, res)=>{
         const queryOptions ={}
         if (req.Model.modelName === 'Category'){
@@ -74,19 +101,14 @@ module.exports = app =>{
         const items = await req.Model.find().setOptions(queryOptions)
         res.send(items)
     })
-    /* ID详情获取 */
+    /* 资源详情 */
     router.get('/:id', async(req, res)=>{
         const result = await req.Model.findById(req.params.id)
         res.send(result)
     })
 
-
     // 3. 挂载路由
-    app.use('/admin/api/rest/:resource',async (req, res, next) =>{
-        const modelName = require('inflection').classify(req.params.resource)
-        req.Model = require(`../../models/${modelName}`)
-        next()
-    },router)
+    app.use('/admin/api/rest/:resource', authMiddleware(), resourceMiddleware(), router)
 
     //二、 文件上传接口
     const multer = require('multer')
@@ -109,7 +131,7 @@ module.exports = app =>{
     })
 
     // const upload = multer({ dest:__dirname + '/../../uploads' })
-    app.post('/admin/api/upload', upload.single('file') ,async(req, res)=>{
+    app.post('/admin/api/upload', authMiddleware(), upload.single('file') ,async(req, res)=>{
         console.log(req.body)
         // multer中间件，给req设置一个file
         console.log(req.file)
@@ -118,34 +140,70 @@ module.exports = app =>{
     })
 
     //三、 login
-    app.post('/admin/api/login', async (req, res) => {
-        const {username, password} = req.body
-        // 1.根据用户名找到用户信息
-        const AdminUser = require('../../models/AdminUser')
-        const user = await AdminUser.findOne({
-            username: username
-        }).select('+password')
+    // resume 
+    // 简历登录校验
+    app.get('/admin/api/isLogin', async(req,res)=>{
+        // todo
+        const token = req.query.email
+        assert(token, 201, "401：请登录")
+        const tokenDate = jwt.verify(token ,req.app.get('secret'))
+        user = await Resume.findById(tokenDate.id)
+        assert(user, 201, "401：用户非法")
+        res.send({
+            login:true,
+            vip:user.isvip
+        })
+    })
+
+
+    app.post('/admin/api/userlogin',async (req, res) => {
+        const user = await Resume.findOne({
+            email:req.body.email
+        })
         if (!user){
-            return res.status(422).send({
-                message: "用户不存在"
-            })
+            res.send({status:"422",message:"用户不存在"})
         }
+        if(user.password !== req.body.password){
+            res.send({status:"422",message:"账号或密码错误"})
+        }
+        // 3.返回token
+        const jwt = require('jsonwebtoken')
+        const token = jwt.sign({
+                id:user._id,
+                username: user.email
+            }, app.get('secret'))
+        message = "登陆成功:\n\n"+user.name
+        return res.send({status:"200",message:message, token, name:user.name, isvip:user.isvip})
+    })
+    
+    app.post('/admin/api/login', async (req, res) => {
+        // 1.根据用户名找到用户信息
+        const user = await AdminUser.findOne({
+            username: req.body.username
+        }).select('+password')
+        assert (user, 422, "用户不存在")
 
         // 2.校验密码
-        if (!require('bcrypt').compareSync(password, user.password)){
-            return res.status(422).send({
-                message: '用户名或密码不正确'
-            })
-        }
-
+        const isVaild = require('bcrypt').compareSync( req.body.password, user.password)
+        assert(isVaild, 422 ,'用户名或密码不正确')
+     
         // 3.返回token
         const jwt = require('jsonwebtoken')
         const token = jwt.sign({
                 id:user._id,
                 username: user.username
             }, app.get('secret'))
-        return res.send({token})
+        return res.send({token, username:user.username})
         
     } )
-    
+
+    // 四、函数
+    // 错误处理函数
+    app.use(async (err, req, res, next)=>{
+        console.log(err)
+        res.status(err.statusCode || '500').send({
+            message: err.message
+        })
+    })
+
 }

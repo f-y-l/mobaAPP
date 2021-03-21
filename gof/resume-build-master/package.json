@@ -1,0 +1,68 @@
+{
+  "name": "resume-build",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "element-ui": "^2.4.10",
+    "vue": "^2.5.17",
+    "vue-axios": "^2.1.4",
+    "vue-draggable": "^2.0.2",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.1.1",
+    "@vue/cli-plugin-eslint": "^3.1.5",
+    "@vue/cli-service": "^3.1.4",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "color": "^3.1.1",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0-0",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/standard"
+    ],
+    "rules": {
+      "indent": 0,
+      "padded-blocks": 0,
+      "comma-spacing": 0,
+      "quotes": 0,
+      "space-before-function-paren": 0,
+      "no-self-assign": 0,
+      "semi-spacing": 0,
+      "no-trailing-spaces": 0,
+      "semi": 0,
+      "comma-style": 0,
+      "no-multiple-empty-lines": 0
+    },
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}

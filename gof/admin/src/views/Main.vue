@@ -56,6 +56,11 @@
                     <el-menu-item index="/admin_users/create">新建管理员</el-menu-item>
                     <el-menu-item index="/admin_users/list">管理员列表</el-menu-item>
                 </el-menu-item-group>
+                <el-menu-item-group>
+                    <template slot="title">简历用户</template>
+                    <el-menu-item index="/resume/create">新建用户</el-menu-item>
+                    <el-menu-item index="/resume/list">用户列表</el-menu-item>
+                </el-menu-item-group>
             </el-submenu>
         </el-menu>
     </el-aside>
@@ -71,7 +76,8 @@
                     <el-dropdown-item>删除</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <span>王小虎</span>
+            <span>{{getName()}}</span>
+            <button>todo:退出登录</button>
         </el-header>
 
         <el-main>
@@ -85,6 +91,14 @@
 
 <script>
 export default {
-    data() {}
+    data() {
+        return {}
+    },
+    methods: {
+        getName (){
+            const user = localStorage.name
+            return user
+        }
+    },
 };
 </script>
