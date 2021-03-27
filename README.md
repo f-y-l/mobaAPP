@@ -17,13 +17,13 @@ vue add element
 ​	npm i express@next mongoose cors
 
 ​	引用路由技巧：
-		// 导出路由模型方法
+​		// 导出路由模型方法
 
 ​		module.exports = app =>{} 
 
 ​		require('./routes/admin')(app)  // 调用路由模型方法
-	
-	链接数据库：
+​	
+​	链接数据库：
 
 ​		mongoose.connect('url',{ÂSpe})
 
@@ -39,7 +39,7 @@ vue add element
 
 2-11
 
-​	npm i inflection ˙（处理数据，如单复数转换，类名变化，单词，下划线）
+​	npm i inflection （处理数据，如单复数转换，类名变化，单词，下划线）
 
 
 2-9 
@@ -48,3 +48,14 @@ vue add element
 
 2-20 
 	npm i vue2-editor （富文本编辑器）
+
+2-16
+
+​	npm i bcrypt （密码散列）
+
+2-18 
+
+​    npm i jsonwebtoken
+
+2-40
+	npm i http-assert (判断存在返回http状态与信息)
